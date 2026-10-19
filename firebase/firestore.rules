@@ -8,7 +8,7 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function isTrainer() {
       return signedIn()
-        && request.auth.token.email == 'TRAINER_EMAIL'
+        && request.auth.token.email == 'g.rajecka@o2.pl'
         && request.auth.token.email_verified == true;
     }
     function isClient(uid) { return signedIn() && request.auth.uid == uid; }

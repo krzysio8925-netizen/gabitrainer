@@ -9,8 +9,8 @@ export const firebaseConfig = {
 };
 
 // The only account allowed into the panel. Must match TRAINER_EMAIL in firebase/firestore.rules.
-export const TRAINER_EMAIL = 'trener@example.com';
-export const TRAINER = { fullName: 'Gabriela Mazur', initials: 'GM' };
+export const TRAINER_EMAIL = 'g.rajecka@o2.pl';
+export const TRAINER = { fullName: 'Gabriela Rajecka', initials: 'GR' };
 
 // Set VITE_USE_EMULATOR=1 to run against the local Firebase emulators instead.
 export const useEmulator = import.meta.env.VITE_USE_EMULATOR === '1';
