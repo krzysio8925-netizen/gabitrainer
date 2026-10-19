@@ -1,14 +1,17 @@
 import Slider from '@react-native-community/slider';
 import { Image } from 'expo-image';
-import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { TRAINER } from '@/backend/trainer';
+import { CIRC } from '@/backend/types';
 import { Icon } from '@/components/Icon';
-import { BackHeader, Btn, Field, H2, H4, HText, Input, Tag, Txt, styles } from '@/components/ui';
-import { CIRC, PREV_WEIGHT } from '@/data/sample';
+import { BackHeader, Btn, ErrorText, Field, H2, H4, HText, Input, Tag, Txt, styles } from '@/components/ui';
+import { addDays, shortDate, startOfWeek } from '@/lib/dates';
 import { pl } from '@/lib/format';
+import { pickBodyPhoto } from '@/lib/photo';
 import { PHOTO_VIEWS, useApp, type PhotoView, type ScaleKey } from '@/store';
 import { color } from '@/theme';
 
@@ -21,27 +24,47 @@ const SCALES: [ScaleKey, string, string][] = [
 const pairs = <T,>(xs: T[]) => Array.from({ length: Math.ceil(xs.length / 2) }, (_, i) => xs.slice(i * 2, i * 2 + 2));
 
 export default function Raport() {
-  const { rep, setRep, repSent, sendReport } = useApp();
+  const { rep, setRep, setRepPhoto, repSentThisWeek: repSent, sendReport, lastReport, client, week } = useApp();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const monday = startOfWeek(new Date());
+  const prevWeight = lastReport?.weight ?? client?.startWeight;
 
   const nPh = PHOTO_VIEWS.filter(v => rep.photos[v]).length;
   const repDone = [nPh === 3, !!rep.weight, CIRC.every(c => rep.circ[c.k]), Object.keys(rep.scales).length === 3, true, !!rep.q.trim()].filter(Boolean).length;
   const cannotSend = !(nPh === 3 && rep.weight);
 
   const pickPhoto = async (view: PhotoView) => {
-    const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], allowsEditing: true, aspect: [3, 4], quality: 0.8 });
-    if (!res.canceled) setRep({ photos: { ...rep.photos, [view]: res.assets[0].uri } });
+    setError('');
+    try {
+      const data = await pickBodyPhoto();
+      if (data) setRepPhoto(view, data);
+    } catch {
+      setError('Nie udało się wczytać zdjęcia. Spróbuj innego.');
+    }
+  };
+
+  const send = async () => {
+    setBusy(true); setError('');
+    try {
+      await sendReport();
+    } catch {
+      setError('Nie udało się wysłać raportu. Sprawdź internet i spróbuj jeszcze raz.');
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.screen}>
-      <BackHeader title="Raport tygodniowy" sub="Tydzień 8 · 19–25.10" onBack={() => router.back()}
+      <BackHeader title="Raport tygodniowy" sub={`Tydzień ${week} · ${shortDate(monday)}–${shortDate(addDays(monday, 6))}`} onBack={() => router.back()}
         right={<Tag variant="accent2" size={12}>{repDone}/6</Tag>} />
 
       {repSent ? (
         <View style={{ flex: 1, paddingTop: 20, paddingHorizontal: 24, paddingBottom: 28, justifyContent: 'center', gap: 16 }}>
           <View style={[styles.circle, { width: 96, height: 96, backgroundColor: color.s300 }]}><Icon name="check" size={44} color={color.s800} /></View>
           <H2>Raport wysłany</H2>
-          <Txt size={16} color={color.n800}>Gabi przejrzy zdjęcia i pomiary do wtorku i w razie potrzeby zmieni plan. Odpowiedź dostaniesz na czacie.</Txt>
+          <Txt size={16} color={color.n800}>{TRAINER.first} przejrzy zdjęcia i pomiary w ciągu 2 dni i w razie potrzeby zmieni plan. Odpowiedź dostaniesz na czacie.</Txt>
           <Btn variant="primary" label="Wróć do pulpitu" size={17} height={54} onPress={() => router.dismissTo('/')} style={{ marginTop: 8 }} />
         </View>
       ) : (
@@ -75,7 +98,7 @@ export default function Raport() {
                 <Input keyboardType="decimal-pad" placeholder="np. 69,0" value={rep.weight} onChangeText={weight => setRep({ weight })}
                   accessibilityLabel="Waga w kg" style={{ width: 160, height: 50, fontSize: 18, fontFamily: 'Figtree_700Bold' }} />
                 <Txt weight={600}>kg</Txt>
-                <Txt size={13} color={color.n700}>poprzednio {PREV_WEIGHT}</Txt>
+                {prevWeight != null && <Txt size={13} color={color.n700}>poprzednio {pl(prevWeight)}</Txt>}
               </View>
             </View>
 
@@ -85,7 +108,7 @@ export default function Raport() {
                 <View key={row[0].k} style={{ flexDirection: 'row', gap: 10 }}>
                   {row.map(c => (
                     <View key={c.k} style={{ flex: 1 }}>
-                      <Field label={`${c.label} · poprz. ${pl(c.n)}`}>
+                      <Field label={lastReport?.circ?.[c.k] ? `${c.label} · poprz. ${pl(lastReport.circ[c.k])}` : c.label}>
                         <Input keyboardType="decimal-pad" value={rep.circ[c.k] ?? ''} onChangeText={t => setRep({ circ: { ...rep.circ, [c.k]: t } })}
                           style={{ height: 44, fontFamily: 'Figtree_600SemiBold' }} />
                       </Field>
@@ -130,12 +153,13 @@ export default function Raport() {
             </View>
 
             <View style={{ gap: 10 }}>
-              <H4>6. Pytania do Gabi</H4>
+              <H4>6. Pytania do {TRAINER.first}</H4>
               <Input multiline placeholder="Co poszło dobrze, co sprawiło trudność?" value={rep.q} onChangeText={q => setRep({ q })} />
             </View>
 
             <View style={{ gap: 10 }}>
-              <Btn variant="primary" label="Wyślij raport" size={17} height={54} disabled={cannotSend} onPress={sendReport} />
+              {!!error && <ErrorText>{error}</ErrorText>}
+              <Btn variant="primary" label={busy ? 'Wysyłam…' : 'Wyślij raport'} size={17} height={54} disabled={cannotSend || busy} onPress={send} />
               {cannotSend && <Txt size={12} color={color.n700} style={{ textAlign: 'center' }}>Dodaj 3 zdjęcia i wagę, żeby wysłać.</Txt>}
             </View>
           </ScrollView>

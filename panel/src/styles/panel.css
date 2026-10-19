@@ -148,3 +148,21 @@ button { font: inherit; color: inherit; }
   .mrow > :nth-child(5) { display: none; }
   .menu-grid { grid-template-columns: 64px minmax(0, 1fr) 64px 36px; gap: 6px; }
 }
+
+/* ── sign-in, empty states ─────────────────────────────────── */
+.login-wrap { min-height: 100%; display: grid; place-items: center; padding: 24px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px)); background: var(--color-bg); overflow-y: auto; }
+.login-card { width: min(420px, 100%); padding: 28px; gap: 18px; box-shadow: var(--shadow-md); }
+.form-error { margin: 0; font-size: 13px; color: var(--color-accent-800); }
+.form-info { margin: 0; font-size: 13px; color: var(--color-accent-2-800); }
+.empty { padding: 22px; border-radius: 28px; background: var(--color-neutral-100); }
+.empty b { display: block; margin-bottom: 4px; }
+.photo-img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 22px; display: block; }
+.cmp-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ev-del { border: 0; background: transparent; cursor: pointer; color: inherit; opacity: .6; font-size: 14px; line-height: 1; padding: 0 0 0 6px; }
+.ev-del:hover { opacity: 1; }
+.select { appearance: none; padding-right: 28px; }
+.link-btn { border: 0; background: transparent; padding: 0; font-size: 11px; color: var(--color-neutral-700); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.meal-grid { display: grid; grid-template-columns: 70px 110px minmax(160px, 1fr) 64px 52px 52px 52px 36px; gap: 8px; align-items: center; padding: 0 4px; min-width: 660px; }
+.meal-row { padding: 10px 4px; border-bottom: 1px solid var(--color-divider); }
+.meal-row .input { padding-inline: 10px; }
+.meal-ing { grid-column: 2 / -2; border-radius: 16px !important; min-height: 0 !important; font-size: 13px; resize: vertical; }

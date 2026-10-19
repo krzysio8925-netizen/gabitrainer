@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import {
-  Pressable, ScrollView, StyleSheet, Text, TextInput, View,
+  ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View,
   type PressableProps, type StyleProp, type TextInputProps, type TextStyle, type ViewStyle,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -225,6 +225,31 @@ export function TabScreen({ children, gap = 16 }: { children: ReactNode; gap?: n
     </SafeAreaView>
   );
 }
+
+/** Shown while the app checks who is signed in. */
+export function Splash() {
+  return (
+    <View style={[styles.screen, { alignItems: 'center', justifyContent: 'center', gap: 16 }]}>
+      <HText size={34}>GabiTrainer</HText>
+      <ActivityIndicator color={color.accent} />
+    </View>
+  );
+}
+
+/** A soft box for "nothing here yet" states. */
+export function Empty({ title, children }: { title: string; children?: ReactNode }) {
+  return (
+    <View style={{ padding: 20, borderRadius: radius.card, backgroundColor: color.n100, gap: 6 }}>
+      <Txt weight={700}>{title}</Txt>
+      {children != null && <Txt size={14} color={color.n700}>{children}</Txt>}
+    </View>
+  );
+}
+
+/** Inline error line under a form. */
+export const ErrorText = ({ children }: { children: ReactNode }) => (
+  <Txt size={13} color={color.a700} style={{ textAlign: 'center' }}>{children}</Txt>
+);
 
 /** Back button + title row used at the top of Log and Raport. */
 export function BackHeader({ title, sub, onBack, right }: { title: string; sub: string; onBack: () => void; right?: ReactNode }) {

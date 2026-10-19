@@ -1,23 +1,55 @@
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Icon } from '@/components/Icon';
-import { Btn, Field, H1, H2, Input, Seg, Txt, styles } from '@/components/ui';
-import { EXPERIENCE, GOALS, WEEKDAYS } from '@/data/sample';
-import { useApp } from '@/store';
+import { Btn, ErrorText, Field, H1, H2, Input, Seg, Txt, styles } from '@/components/ui';
+import { TRAINER } from '@/backend/trainer';
+import { WEEKDAYS } from '@/lib/dates';
+import { authError, useApp } from '@/store';
 import { color } from '@/theme';
 
 const BIG = { size: 17, height: 54 } as const;
 
+const GOALS = [
+  ['Redukcja tkanki tłuszczowej', 'Mniej kilogramów i centymetrów'],
+  ['Budowa mięśni', 'Więcej siły i lepsza sylwetka'],
+  ['Siła i sprawność', 'Lepsze wyniki i kondycja'],
+  ['Zdrowie i samopoczucie', 'Ruch bez bólu, więcej energii'],
+] as const;
+const EXPERIENCE = ['Początkujący', 'Średni', 'Zaawansowany'];
+
 export default function Onboarding() {
-  const { survey, setSurvey, toggleDay, finishOnboarding } = useApp();
+  const { survey, setSurvey, toggleDay, register, user, client } = useApp();
   const [step, setStep] = useState(0);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
   const next = () => setStep(s => s + 1);
-  const enterApp = () => {
-    finishOnboarding();
-    router.replace('/');
+  const enterApp = () => router.replace('/');
+
+  // Someone already signed in with a profile doesn't need the survey again
+  // (from the account step on, the sign-up itself creates that profile).
+  if (user && client && step < 3) return <Redirect href="/" />;
+
+  const dataReady = !!(survey.age.trim() && survey.height.trim() && survey.weight.trim() && survey.days.length);
+  const accountReady = !!(name.trim() && email.trim() && password.length >= 6 && consent);
+
+  const createAccount = async () => {
+    setBusy(true);
+    setError('');
+    try {
+      await register(name, email, password, survey);
+      setStep(4);
+    } catch (e) {
+      setError(authError(e));
+    } finally {
+      setBusy(false);
+    }
   };
 
   let body: ReactNode;
@@ -35,7 +67,7 @@ export default function Onboarding() {
         </View>
         <View style={{ gap: 6 }}>
           <Btn variant="primary" label="Zaczynamy" {...BIG} onPress={next} />
-          <Btn variant="ghost" label="Mam już konto" onPress={enterApp} style={{ alignSelf: 'center' }} />
+          <Btn variant="ghost" label="Mam już konto" onPress={() => router.push('/login')} style={{ alignSelf: 'center' }} />
         </View>
       </View>
     );
@@ -47,10 +79,10 @@ export default function Onboarding() {
           <Txt color={color.n700}>Wybierz jeden — Gabi dopyta o szczegóły.</Txt>
         </View>
         <View style={{ gap: 10 }}>
-          {GOALS.map(([label, sub], i) => {
-            const on = survey.goal === i;
+          {GOALS.map(([label, sub]) => {
+            const on = survey.goal === label;
             return (
-              <Pressable key={label} onPress={() => setSurvey({ goal: i })} accessibilityRole="radio" accessibilityState={{ checked: on }}
+              <Pressable key={label} onPress={() => setSurvey({ goal: label })} accessibilityRole="radio" accessibilityState={{ checked: on }}
                 style={{ flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 18, paddingHorizontal: 20, borderRadius: 24, borderWidth: 2,
                   borderColor: on ? color.accent : 'transparent', backgroundColor: on ? color.a100 : color.surface }}>
                 <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: on ? color.accent : 'transparent', backgroundColor: color.surface, alignItems: 'center', justifyContent: 'center' }}>
@@ -75,12 +107,12 @@ export default function Onboarding() {
         <View style={{ flexDirection: 'row', gap: 10 }}>
           {([['age', 'Wiek', 'number-pad'], ['height', 'Wzrost (cm)', 'number-pad'], ['weight', 'Waga (kg)', 'decimal-pad']] as const).map(([k, label, kb]) => (
             <View key={k} style={{ flex: 1 }}>
-              <Field label={label}><Input keyboardType={kb} value={survey[k]} onChangeText={t => setSurvey({ [k]: t })} /></Field>
+              <Field label={label}><Input keyboardType={kb} value={survey[k]} onChangeText={t => setSurvey({ [k]: t })} accessibilityLabel={label} /></Field>
             </View>
           ))}
         </View>
         <Field label="Ile masz doświadczenia?">
-          <Seg value={survey.exp} onChange={exp => setSurvey({ exp })} options={EXPERIENCE.map((label, i) => ({ value: i, label }))} />
+          <Seg value={survey.exp} onChange={exp => setSurvey({ exp })} options={EXPERIENCE.map(label => ({ value: label, label }))} />
         </Field>
         <Field label="W które dni możesz trenować?">
           <View style={{ flexDirection: 'row', gap: 6 }}>
@@ -99,7 +131,29 @@ export default function Onboarding() {
           <Input multiline placeholder="np. ból kolana przy wykrokach, nie jem ryb" value={survey.limits} onChangeText={limits => setSurvey({ limits })} />
         </Field>
         <View style={{ flex: 1 }} />
-        <Btn variant="primary" label="Wyślij ankietę do Gabi" {...BIG} onPress={next} />
+        <Btn variant="primary" label="Dalej" {...BIG} onPress={next} disabled={!dataReady} />
+        {!dataReady && <Txt size={12} color={color.n700} style={{ textAlign: 'center', marginTop: -10 }}>Uzupełnij wiek, wzrost, wagę i dni treningowe.</Txt>}
+      </View>
+    );
+  } else if (step === 3) {
+    body = (
+      <View style={{ flex: 1, gap: 18 }}>
+        <View>
+          <H2 style={{ marginBottom: 6 }}>Twoje konto</H2>
+          <Txt color={color.n700}>Tym e-mailem i hasłem zalogujesz się na każdym urządzeniu.</Txt>
+        </View>
+        <Field label="Imię i nazwisko"><Input value={name} onChangeText={setName} autoComplete="name" accessibilityLabel="Imię i nazwisko" /></Field>
+        <Field label="E-mail"><Input value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" autoComplete="email" accessibilityLabel="E-mail" /></Field>
+        <Field label="Hasło (min. 6 znaków)"><Input value={password} onChangeText={setPassword} secureTextEntry autoComplete="new-password" accessibilityLabel="Hasło" /></Field>
+        <Pressable onPress={() => setConsent(c => !c)} accessibilityRole="checkbox" accessibilityState={{ checked: consent }} style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <View style={[styles.circle, { width: 26, height: 26, borderRadius: 8, borderWidth: 2, borderColor: consent ? color.s600 : color.n400, backgroundColor: consent ? color.s600 : 'transparent', marginTop: 2 }]}>
+            {consent && <Icon name="check" size={16} color={color.bg} />}
+          </View>
+          <Txt size={13} color={color.n800} style={{ flex: 1 }}>Zgadzam się, żeby trenerka {TRAINER.fullName} przetwarzała moje dane, w tym wagę, obwody i zdjęcia sylwetki, w celu prowadzenia moich treningów i diety.</Txt>
+        </Pressable>
+        <View style={{ flex: 1 }} />
+        {!!error && <ErrorText>{error}</ErrorText>}
+        <Btn variant="primary" label={busy ? 'Zakładam konto…' : 'Wyślij ankietę do Gabi'} {...BIG} onPress={createAccount} disabled={!accountReady || busy} />
       </View>
     );
   } else {
@@ -118,11 +172,11 @@ export default function Onboarding() {
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1, paddingTop: 12, paddingHorizontal: 24, paddingBottom: 28, gap: 20 }}>
-          {(step === 1 || step === 2) && (
+          {step >= 1 && step <= 3 && (
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
               <Btn icon="left" iconOnly label="Wróć" onPress={() => setStep(s => s - 1)} />
               <View style={{ flex: 1, flexDirection: 'row', gap: 6 }}>
-                {[1, 2].map(i => <View key={i} style={{ flex: 1, height: 6, borderRadius: 999, backgroundColor: step >= i ? color.accent : color.n300 }} />)}
+                {[1, 2, 3].map(i => <View key={i} style={{ flex: 1, height: 6, borderRadius: 999, backgroundColor: step >= i ? color.accent : color.n300 }} />)}
               </View>
             </View>
           )}

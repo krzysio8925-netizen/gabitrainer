@@ -4,7 +4,7 @@ import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon, type IconName } from '@/components/Icon';
-import { Txt, styles } from '@/components/ui';
+import { Splash, Txt, styles } from '@/components/ui';
 import { useApp } from '@/store';
 import { color, shadow } from '@/theme';
 
@@ -17,9 +17,10 @@ const TABS = [
 ] as const;
 
 export default function TabLayout() {
-  const { onboarded } = useApp();
+  const { loading, user, client, unreadChat } = useApp();
   const insets = useSafeAreaInsets();
-  if (!onboarded) return <Redirect href="/onboarding" />;
+  if (loading) return <Splash />;
+  if (!user || !client) return <Redirect href="/onboarding" />;
 
   return (
     <Tabs>
@@ -32,7 +33,7 @@ export default function TabLayout() {
         }}>
           {TABS.map(t => (
             <TabTrigger key={t.name} name={t.name} href={t.href} asChild>
-              <TabButton label={t.label} icon={t.icon} />
+              <TabButton label={t.label} icon={t.icon} badge={t.name === 'czat' && unreadChat > 0} />
             </TabTrigger>
           ))}
         </View>
@@ -42,12 +43,13 @@ export default function TabLayout() {
 }
 
 // expo-router types `ref` against the old class View; it still reaches Pressable at runtime via the spread.
-function TabButton({ label, icon, isFocused, ...props }: Omit<TabTriggerSlotProps, 'ref'> & { label: string; icon: IconName }) {
+function TabButton({ label, icon, badge, isFocused, ...props }: Omit<TabTriggerSlotProps, 'ref'> & { label: string; icon: IconName; badge?: boolean }) {
   const fg = isFocused ? color.a800 : color.n700;
   return (
     <Pressable {...props} accessibilityRole="tab" accessibilityState={{ selected: isFocused }} style={{ flex: 1, alignItems: 'center', gap: 3, paddingVertical: 6 }}>
       <View style={[styles.circle, { width: 52, height: 30, backgroundColor: isFocused ? color.a200 : 'transparent' }]}>
         <Icon name={icon} color={fg} />
+        {badge && <View style={{ position: 'absolute', top: 3, right: 12, width: 9, height: 9, borderRadius: 5, backgroundColor: color.accent }} />}
       </View>
       <Txt size={11} weight={600} lh={1.3} color={fg}>{label}</Txt>
     </Pressable>

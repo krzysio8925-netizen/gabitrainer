@@ -1,20 +1,27 @@
-import { CLIENTS } from './data';
+import { TRAINER } from './backend/config';
 import { Icon, type IconName } from './icons';
-import { usePanel, type View } from './store';
+import { isUnread, statusOf, usePanel, type View } from './store';
 import { Calendar } from './views/Calendar';
 import { Clients } from './views/Clients';
+import { Login } from './views/Login';
 import { Messages } from './views/Messages';
 
-// The client app's web preview.
-const CLIENT_APP_URL = 'https://claude.ai/artifact/GacVetj44iDWhCTqCXrBCo';
+// The client app is published one level up from the panel (site root vs /panel/).
+const CLIENT_APP_URL = '../';
 
 export default function App() {
   const p = usePanel();
-  const pending = CLIENTS.filter(c => ['raport', 'ankieta'].includes(p.statusOf(c))).length;
+
+  if (p.user === undefined) return <div className="login-wrap"><p className="muted">Ładowanie…</p></div>;
+  if (!p.ready) return <Login p={p} />;
+
+  const list = p.clients ?? [];
+  const pending = list.filter(c => ['raport', 'ankieta'].includes(statusOf(c))).length;
+  const unread = list.filter(isUnread).length;
   const nav: [View, string, IconName, number][] = [
     ['klienci', 'Podopieczni', 'users', pending],
     ['kalendarz', 'Kalendarz', 'cal', 0],
-    ['czat', 'Wiadomości', 'chat', p.unread.length],
+    ['czat', 'Wiadomości', 'chat', unread],
   ];
 
   return (
@@ -36,10 +43,10 @@ export default function App() {
         <div className="side-spacer" style={{ flex: 1 }} />
         <a className="side-link" href={CLIENT_APP_URL} target="_blank" rel="noreferrer">Podgląd aplikacji klienta →</a>
         <div className="me">
-          <div className="av" style={{ width: 34, height: 34, background: 'var(--color-accent-300)', fontSize: 13 }}>GM</div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontWeight: 700, fontSize: 13 }}>Gabriela Mazur</div>
-            <div className="muted" style={{ fontSize: 11 }}>Trenerka personalna</div>
+          <div className="av" style={{ width: 34, height: 34, background: 'var(--color-accent-300)', fontSize: 13 }}>{TRAINER.initials}</div>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div style={{ fontWeight: 700, fontSize: 13 }}>{TRAINER.fullName}</div>
+            <button className="link-btn" onClick={() => p.session.logout()}>Wyloguj</button>
           </div>
         </div>
       </aside>
