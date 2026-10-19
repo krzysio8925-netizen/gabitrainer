@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="%LANG_ISO_CODE%">
+  <head>
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>%WEB_TITLE%</title>
+    <meta name="description" content="Plan treningowy, jadłospis i cotygodniowe raporty dla podopiecznych Gabi." />
+    <!-- Installable as a home-screen app. __BASE__ is filled in by scripts/finish-web.mjs. -->
+    <link rel="manifest" href="__BASE__/manifest.json" />
+    <meta name="theme-color" content="#f5ead8" />
+    <link rel="icon" type="image/png" href="__BASE__/favicon.png" />
+    <link rel="apple-touch-icon" href="__BASE__/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="GabiTrainer" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <style id="expo-reset">
+      html, body { height: 100%; background: #f5ead8; }
+      body { overflow: hidden; overscroll-behavior: none; }
+      #root { display: flex; height: 100%; flex: 1; }
+      /* On a laptop the app sits in a phone-width column. */
+      @media (min-width: 560px) { #root { max-width: 480px; margin: 0 auto; box-shadow: 0 12px 32px rgba(46,43,37,0.22); } body { background: #eee7db; } }
+    </style>
+  </head>
+  <body>
+    <noscript>Włącz JavaScript, żeby korzystać z aplikacji.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

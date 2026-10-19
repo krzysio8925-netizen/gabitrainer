@@ -1,25 +1,34 @@
-# CODING AGENTS: READ THIS FIRST
+# GabiTrainer
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+Aplikacja dla podopiecznych i panel dla trenerki, połączone wspólną bazą danych.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+| Część | Folder | Gdzie działa |
+| --- | --- | --- |
+| Aplikacja klienta (iOS, Android, przeglądarka) | `app/` | `https://<konto>.github.io/<repozytorium>/` — można dodać do ekranu głównego telefonu |
+| Panel trenera (przeglądarka, Mac) | `panel/` | `https://<konto>.github.io/<repozytorium>/panel/` |
+| Baza danych i logowanie (Firebase) | `firebase/` | konsola Firebase |
+| Projekt z Claude Design | `project/`, `chats/` | — |
 
-## What you should do — IMPORTANT
+## Jak to działa
 
-**Read the chat transcripts first.** There are 1 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+- Klient wypełnia ankietę i zakłada konto (e-mail + hasło). W panelu pojawia się jako „Nowa ankieta”.
+- Trenerka zapisuje plan treningowy i jadłospis — klient widzi je od razu w aplikacji.
+- Klient zapisuje treningi, wysyła raport tygodniowy ze zdjęciami i pisze na czacie — trenerka widzi to na żywo.
+- Feedback do raportu trafia do czatu klienta.
 
-**Read `project/GabiTrainer Klient.dc.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+Każdy klient widzi wyłącznie swoje dane. Do panelu wejdzie tylko jeden, potwierdzony adres e-mail trenerki
+(`firebase/firestore.rules` i `panel/src/backend/config.ts`).
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+## Publikacja
 
-## About the design files
+Każda zmiana wysłana na gałąź `main` publikuje się sama (`.github/workflows/deploy.yml`, zakładka *Actions* na GitHubie).
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+## Praca lokalna
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+```bash
+cd app && npm install && npx expo start      # aplikacja
+cd panel && npm install && npm run dev       # panel
+```
 
-## Bundle contents
-
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `Aplikacja treningowa z panelem trenera` project files (HTML prototypes, assets, components)
+Testy bez prawdziwej bazy: uruchom emulatory Firebase w `firebase/` (`npx firebase-tools emulators:start --project demo-gabi`)
+i zbuduj aplikacje z `EXPO_PUBLIC_USE_EMULATOR=1` / `VITE_USE_EMULATOR=1`.

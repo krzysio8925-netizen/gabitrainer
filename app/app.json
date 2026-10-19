@@ -24,7 +24,8 @@
     },
     "web": {
       "output": "single",
-      "favicon": "./assets/favicon.png"
+      "favicon": "./public/favicon.png",
+      "name": "GabiTrainer"
     },
     "plugins": [
       [
