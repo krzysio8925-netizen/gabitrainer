@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/organic-a51b5586-7e87-4ae0-b507-de04ca305300/styles.css">
+<script src="_ds/organic-a51b5586-7e87-4ae0-b507-de04ca305300/_ds_bundle.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,100..900,0..100,0..1&display=swap">
+<style>:root{--font-heading:"Caprasimo","Fraunces",system-ui,serif}h1,h2,h3,h4,h5,h6,.btn,.card-title,.dialog-title,.nav-brand,[style*="font-heading"]{font-variation-settings:"wght" 900,"SOFT" 100,"WONK" 0,"opsz" 96}body{margin:0}a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}</style>
+</helmet>
+<div style="height:100vh;min-height:680px;display:flex;background:var(--color-bg);color:var(--color-text);overflow:hidden">
+
+  <aside style="width:232px;flex:none;display:flex;flex-direction:column;gap:22px;padding:22px 16px;background:var(--color-surface)">
+    <div style="display:flex;align-items:center;gap:10px;padding:0 6px">
+      <div style="width:34px;height:34px;border-radius:50%;background:var(--color-accent);color:var(--color-bg);display:grid;place-items:center;font-family:var(--font-heading);font-size:17px">G</div>
+      <div style="font-family:var(--font-heading);font-size:19px">GabiTrainer</div>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:4px">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="3">
+        <button onClick="{{ n.go }}" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;border:0;font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-align:left;background:{{ n.bg }};color:{{ n.fg }}" style-hover="background:var(--color-neutral-300)">{{ n.icon }}<span style="flex:1">{{ n.label }}</span><sc-if value="{{ n.count }}" hint-placeholder-val="{{ false }}"><span style="min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--color-accent);color:var(--color-bg);font-size:11px;display:grid;place-items:center">{{ n.count }}</span></sc-if></button>
+      </sc-for>
+    </nav>
+    <div style="flex:1"></div>
+    <a href="GabiTrainer Klient.dc.html" style="font-size:13px;font-weight:600;padding:0 6px">Podgląd aplikacji klienta →</a>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:999px;background:var(--color-bg)">
+      <div style="width:34px;height:34px;border-radius:50%;background:var(--color-accent-300);display:grid;place-items:center;font-weight:700;font-size:13px">GM</div>
+      <div style="min-width:0"><div style="font-weight:700;font-size:13px">Gabriela Mazur</div><div style="font-size:11px;color:var(--color-neutral-700)">Trenerka personalna</div></div>
+    </div>
+  </aside>
+
+  <sc-if value="{{ isKlienci }}" hint-placeholder-val="{{ true }}">
+    <section style="width:310px;flex:none;display:flex;flex-direction:column;gap:14px;padding:22px 14px 14px 20px;min-height:0">
+      <div style="display:flex;align-items:baseline;justify-content:space-between"><h3 style="margin:0">Podopieczni</h3><span style="font-size:13px;color:var(--color-neutral-700)">{{ clientCount }}</span></div>
+      <div style="position:relative"><span style="position:absolute;left:13px;top:10px;color:var(--color-neutral-600)">{{ icS.search }}</span><input class="input" placeholder="Szukaj" value="{{ q }}" onChange="{{ setQ }}" style="padding-left:36px;height:38px"></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="3"><button onClick="{{ f.pick }}" style="padding:6px 12px;border-radius:999px;border:0;font:inherit;font-size:12px;font-weight:600;cursor:pointer;background:{{ f.bg }};color:{{ f.fg }}">{{ f.label }}</button></sc-for>
+      </div>
+      <div style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-right:-6px;padding-right:6px">
+        <sc-for list="{{ clients }}" as="c" hint-placeholder-count="6">
+          <button onClick="{{ c.pick }}" style="display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:24px;border:0;font:inherit;text-align:left;cursor:pointer;color:inherit;background:{{ c.bg }}" style-hover="background:var(--color-neutral-200)">
+            <div style="width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:{{ c.avBg }}">{{ c.ini }}</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;justify-content:space-between;gap:6px"><span style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span><span style="font-size:11px;color:var(--color-neutral-700);white-space:nowrap">{{ c.when }}</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:3px"><span style="font-size:12px;color:var(--color-neutral-700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.goal }}&nbsp;· tydz. {{ c.week }}</span><span class="tag {{ c.tagCls }}" style="white-space:nowrap">{{ c.status }}</span></div>
+            </div>
+          </button>
+        </sc-for>
+      </div>
+    </section>
+
+    <main style="flex:1;min-width:0;overflow-y:auto;padding:22px 28px 40px 14px">
+      <div style="display:flex;flex-direction:column;gap:18px;max-width:1080px">
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <div style="width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:18px;background:{{ cur.avBg }}">{{ cur.ini }}</div>
+          <div style="flex:1;min-width:200px"><h2 style="margin:0">{{ cur.full }}</h2><div style="font-size:14px;color:var(--color-neutral-700)">{{ cur.goal }}&nbsp;· tydzień {{ cur.week }}&nbsp;z 12 · {{ cur.age }}&nbsp;lat, {{ cur.height }}&nbsp;cm</div></div>
+          <button onClick="{{ openChat }}" class="btn btn-secondary">{{ icS.chat }}Napisz</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+            <div style="padding:16px 18px;border-radius:28px;background:{{ s.bg }}"><div style="font-size:12px;color:{{ s.fg }}">{{ s.label }}</div><div style="font-family:var(--font-heading);font-size:26px;color:{{ s.fg2 }}">{{ s.val }}</div></div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:4px;padding:4px;border-radius:999px;background:var(--color-surface);align-self:flex-start;flex-wrap:wrap">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button onClick="{{ t.pick }}" style="padding:9px 18px;border-radius:999px;border:0;font:inherit;font-size:14px;font-weight:600;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.sh }}">{{ t.label }}</button></sc-for>
+        </div>
+
+        <sc-if value="{{ tabRaport }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:start">
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <div class="card" style="padding:22px;gap:14px">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><div class="card-title" style="font-size:20px">Raport · tydzień {{ cur.week }}</div><span style="font-size:13px;color:var(--color-neutral-700)">{{ rep.sentAt }}</span></div>
+                <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+                  <sc-for list="{{ repPhotos }}" as="p" hint-placeholder-count="3">
+                    <div style="display:flex;flex-direction:column;gap:6px"><div style="aspect-ratio:3/4;border-radius:22px;background:repeating-linear-gradient(135deg,var(--color-neutral-300) 0 10px,var(--color-neutral-200) 10px 20px);display:grid;place-items:center;font-size:12px;color:var(--color-neutral-700)">zdjęcie klienta</div><div style="font-size:12px;font-weight:600">{{ p }}</div></div>
+                  </sc-for>
+                </div>
+                <button onClick="{{ toCompare }}" class="btn btn-ghost" style="align-self:flex-start">Porównaj z poprzednimi tygodniami →</button>
+              </div>
+              <div class="card" style="padding:10px 22px 14px">
+                <div style="display:grid;grid-template-columns:minmax(0,1.4fr) repeat(4,minmax(0,1fr));gap:8px;padding:8px 0;border-bottom:1px solid var(--color-divider);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)"><span>Pomiar</span><span>Poprz.</span><span>Teraz</span><span>Zmiana</span><span style="text-align:right">Od startu</span></div>
+                <sc-for list="{{ measRows }}" as="m" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:minmax(0,1.4fr) repeat(4,minmax(0,1fr));gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--color-divider);font-size:14px"><span style="font-weight:600">{{ m.label }}</span><span>{{ m.prev }}</span><span style="font-weight:700">{{ m.now }}</span><span><span class="tag {{ m.cls }}">{{ m.d }}</span></span><span style="text-align:right;color:var(--color-neutral-700)">{{ m.total }}</span></div></sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <div class="card" style="padding:22px;gap:14px">
+                <div class="card-kicker" style="color:var(--color-accent-700)">Samopoczucie</div>
+                <sc-for list="{{ repScales }}" as="s" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:12px"><span style="width:96px;font-size:14px">{{ s.label }}</span><div style="flex:1;display:flex;gap:5px"><sc-for list="{{ s.dots }}" as="d" hint-placeholder-count="5"><div style="flex:1;height:10px;border-radius:999px;background:{{ d }}"></div></sc-for></div><b style="width:28px;text-align:right">{{ s.v }}/5</b></div>
+                </sc-for>
+                <div style="display:flex;align-items:center;gap:12px"><span style="width:96px;font-size:14px">Dieta</span><div style="flex:1;height:10px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="height:100%;border-radius:999px;background:var(--color-accent-2-600);width:{{ rep.diet }}%"></div></div><b style="width:40px;text-align:right">{{ rep.diet }}%</b></div>
+                <div style="display:flex;align-items:center;gap:12px"><span style="width:96px;font-size:14px">Treningi</span><span style="font-size:14px"><b>{{ rep.workouts }}</b> zapisane w dzienniczku</span></div>
+              </div>
+              <div class="card" style="padding:22px;gap:10px">
+                <div class="card-kicker" style="color:var(--color-accent-700)">Pytania od {{ cur.first }}</div>
+                <p style="margin:0;font-size:15px;text-wrap:pretty">„{{ rep.q }}”</p>
+              </div>
+              <div class="card" style="padding:22px;gap:12px;background:var(--color-neutral-100);box-shadow:var(--shadow-sm)">
+                <sc-if value="{{ notReviewed }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;flex-direction:column;gap:12px">
+                    <div class="card-title">Twój feedback</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ snippets }}" as="s" hint-placeholder-count="4"><button onClick="{{ s.add }}" class="tag tag-accent" style="border:0;cursor:pointer;font:inherit;font-size:12px">+ {{ s.t }}</button></sc-for></div>
+                    <textarea class="input" style="border-radius:20px;min-height:130px;background:var(--color-bg)" placeholder="Napisz, co idzie dobrze i co zmieniasz w planie…" value="{{ fb }}" onChange="{{ setFb }}"></textarea>
+                    <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn btn-secondary" onClick="{{ toPlan }}">Edytuj plan</button><button onClick="{{ sendFb }}" disabled="{{ fbEmpty }}" class="btn btn-primary">Wyślij i oznacz jako sprawdzony</button></div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ reviewed }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:12px;align-items:flex-start">
+                    <div style="width:40px;height:40px;flex:none;border-radius:50%;background:var(--color-accent-2-600);color:var(--color-bg);display:grid;place-items:center">{{ icS.check }}</div>
+                    <div style="min-width:0"><div style="font-weight:700">Raport sprawdzony</div><div style="font-size:14px;color:var(--color-neutral-800);white-space:pre-wrap;text-wrap:pretty">{{ reviewedText }}</div></div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabCompare }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start">
+            <div class="card" style="padding:22px;gap:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+                <div class="card-title" style="font-size:20px">Przed / po</div>
+                <div class="seg"><sc-for list="{{ cmpViews }}" as="v" hint-placeholder-count="3"><label class="seg-opt"><input type="radio" name="cmpv" checked="{{ v.on }}" onChange="{{ v.pick }}">{{ v.label }}</label></sc-for></div>
+              </div>
+              <div style="position:relative;aspect-ratio:3/4;max-height:560px;border-radius:28px;overflow:hidden;user-select:none">
+                <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,var(--color-neutral-300) 0 12px,var(--color-neutral-200) 12px 24px);display:flex;align-items:flex-end;padding:16px"><span class="tag tag-neutral" style="font-size:12px">{{ cmpA.label }}&nbsp;· {{ cmpA.w }}</span></div>
+                <div style="position:absolute;inset:0;clip-path:inset(0 0 0 {{ cmpPct }}%);background:repeating-linear-gradient(135deg,var(--color-accent-2-300) 0 12px,var(--color-accent-2-200) 12px 24px);display:flex;align-items:flex-end;justify-content:flex-end;padding:16px"><span class="tag tag-accent-2" style="font-size:12px">{{ cmpB.label }}&nbsp;· {{ cmpB.w }}</span></div>
+                <div style="position:absolute;top:0;bottom:0;width:4px;margin-left:-2px;background:var(--color-bg);left:{{ cmpPct }}%;pointer-events:none"></div>
+                <div style="position:absolute;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:var(--color-bg);box-shadow:var(--shadow-md);display:grid;place-items:center;font-weight:700;left:{{ cmpPct }}%;pointer-events:none">⇆</div>
+                <div style="position:absolute;left:50%;top:16px;transform:translateX(-50%);font-size:12px;color:var(--color-neutral-700)">{{ cmpView }}</div>
+                <input type="range" min="0" max="100" value="{{ cmpPct }}" onInput="{{ setCmpPct }}" onChange="{{ setCmpPct }}" style="position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize">
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <div class="card" style="padding:22px;gap:12px">
+                <div class="card-kicker" style="color:var(--color-accent-700)">Wybierz tygodnie</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;font-size:13px">Przed</span><div style="display:flex;gap:5px;flex-wrap:wrap"><sc-for list="{{ weeksA }}" as="w" hint-placeholder-count="8"><button onClick="{{ w.pick }}" style="width:36px;height:36px;border-radius:50%;border:0;font:inherit;font-size:12px;font-weight:700;cursor:pointer;background:{{ w.bg }};color:{{ w.fg }}">{{ w.n }}</button></sc-for></div></div>
+                  <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;font-size:13px">Po</span><div style="display:flex;gap:5px;flex-wrap:wrap"><sc-for list="{{ weeksB }}" as="w" hint-placeholder-count="8"><button onClick="{{ w.pick }}" style="width:36px;height:36px;border-radius:50%;border:0;font:inherit;font-size:12px;font-weight:700;cursor:pointer;background:{{ w.bg }};color:{{ w.fg }}">{{ w.n }}</button></sc-for></div></div>
+                </div>
+              </div>
+              <div class="card" style="padding:22px;gap:8px">
+                <div style="display:flex;justify-content:space-between;align-items:baseline"><div class="card-title">Waga</div><span class="tag tag-accent-2" style="font-size:12px">{{ cmpDelta }}</span></div>
+                <svg width="100%" viewBox="0 0 420 170" style="display:block;overflow:visible">
+                  <line x1="0" x2="420" y1="20" y2="20" stroke="var(--color-divider)" stroke-dasharray="3 5"></line>
+                  <line x1="0" x2="420" y1="85" y2="85" stroke="var(--color-divider)" stroke-dasharray="3 5"></line>
+                  <line x1="0" x2="420" y1="150" y2="150" stroke="var(--color-divider)" stroke-dasharray="3 5"></line>
+                  <polyline points="{{ wChart.line }}" fill="none" stroke="var(--color-accent)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                  <sc-for list="{{ wChart.dots }}" as="p" hint-placeholder-count="8"><circle cx="{{ p.x }}" cy="{{ p.y }}" r="{{ p.r }}" fill="{{ p.fill }}" stroke="var(--color-accent)" stroke-width="3"></circle></sc-for>
+                </svg>
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--color-neutral-700)"><sc-for list="{{ wChart.dots }}" as="p" hint-placeholder-count="8"><span>{{ p.l }}</span></sc-for></div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabPlan }}" hint-placeholder-val="{{ false }}">
+          <div class="card" style="padding:22px;gap:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+              <div class="seg"><sc-for list="{{ planDays }}" as="d" hint-placeholder-count="4"><label class="seg-opt" style="padding:8px 16px"><input type="radio" name="pday" checked="{{ d.on }}" onChange="{{ d.pick }}">{{ d.label }}</label></sc-for></div>
+              <span style="font-size:13px;color:var(--color-neutral-700)">{{ planDayInfo }}</span>
+            </div>
+            <div style="display:grid;grid-template-columns:28px minmax(0,2.2fr) 70px 80px 90px minmax(0,2fr) 36px;gap:10px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700);padding:0 4px"><span></span><span>Ćwiczenie</span><span>Serie</span><span>Powt.</span><span>Ciężar</span><span>Wskazówka dla klienta</span><span></span></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ planRows }}" as="r" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:28px minmax(0,2.2fr) 70px 80px 90px minmax(0,2fr) 36px;gap:10px;align-items:center;padding:6px 4px;border-radius:999px" style-hover="background:var(--color-neutral-200)">
+                  <span style="width:28px;height:28px;border-radius:50%;background:var(--color-bg);display:grid;place-items:center;font-size:12px;font-weight:700">{{ r.num }}</span>
+                  <input class="input" value="{{ r.name }}" onChange="{{ r.setName }}" style="background:var(--color-bg);font-weight:600">
+                  <input class="input" value="{{ r.sets }}" onChange="{{ r.setSets }}" style="background:var(--color-bg);text-align:center">
+                  <input class="input" value="{{ r.reps }}" onChange="{{ r.setReps }}" style="background:var(--color-bg);text-align:center">
+                  <input class="input" value="{{ r.load }}" onChange="{{ r.setLoad }}" style="background:var(--color-bg);text-align:center">
+                  <input class="input" value="{{ r.note }}" placeholder="opcjonalnie" onChange="{{ r.setNote }}" style="background:var(--color-bg)">
+                  <button onClick="{{ r.del }}" class="btn btn-icon btn-ghost" style="color:var(--color-neutral-700)">{{ icS.trash }}</button>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+              <button onClick="{{ addEx }}" class="btn btn-secondary">{{ icS.plus }}Dodaj ćwiczenie</button>
+              <button onClick="{{ savePlan }}" class="btn btn-primary">Zapisz i wyślij do {{ cur.firstTo }}</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ tabDiet }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:18px;align-items:start">
+            <div class="card" style="padding:22px;gap:14px">
+              <div class="card-title">Cel dzienny</div>
+              <div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:var(--font-heading);font-size:36px">{{ dietKcal }}</span><span style="color:var(--color-neutral-700)">kcal</span></div>
+              <sc-for list="{{ macroInputs }}" as="m" hint-placeholder-count="3">
+                <div class="field"><label>{{ m.label }}&nbsp;(g) · {{ m.share }}% energii</label><div style="display:flex;align-items:center;gap:10px"><input class="input" inputmode="numeric" value="{{ m.val }}" onChange="{{ m.set }}" style="background:var(--color-bg);font-weight:700;max-width:100px"><div style="flex:1;height:8px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="height:100%;border-radius:999px;background:{{ m.color }};width:{{ m.share }}%"></div></div></div></div>
+              </sc-for>
+              <div style="font-size:12px;color:var(--color-neutral-700)">Kalorie liczone automatycznie: 4 kcal/g białka i węglowodanów, 9 kcal/g tłuszczu.</div>
+            </div>
+            <div class="card" style="padding:22px;gap:14px">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+                <div class="seg"><sc-for list="{{ dietDays }}" as="d" hint-placeholder-count="3"><label class="seg-opt" style="padding:8px 16px"><input type="radio" name="dday" checked="{{ d.on }}" onChange="{{ d.pick }}">{{ d.label }}</label></sc-for></div>
+                <span class="tag {{ menuCls }}" style="font-size:12px">{{ menuSum }}</span>
+              </div>
+              <div style="display:grid;grid-template-columns:80px minmax(0,1fr) 90px 36px;gap:10px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700);padding:0 4px"><span>Godz.</span><span>Posiłek</span><span>kcal</span><span></span></div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ menuRows }}" as="m" hint-placeholder-count="5">
+                  <div style="display:grid;grid-template-columns:80px minmax(0,1fr) 90px 36px;gap:10px;align-items:center;padding:4px">
+                    <input class="input" value="{{ m.time }}" onChange="{{ m.setTime }}" style="background:var(--color-bg);text-align:center">
+                    <input class="input" value="{{ m.name }}" onChange="{{ m.setName }}" style="background:var(--color-bg);font-weight:600">
+                    <input class="input" value="{{ m.kcal }}" onChange="{{ m.setKcal }}" style="background:var(--color-bg);text-align:center">
+                    <button onClick="{{ m.del }}" class="btn btn-icon btn-ghost" style="color:var(--color-neutral-700)">{{ icS.trash }}</button>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+                <button onClick="{{ addMeal }}" class="btn btn-secondary">{{ icS.plus }}Dodaj posiłek</button>
+                <button onClick="{{ saveDiet }}" class="btn btn-primary">Zapisz i wyślij do {{ cur.firstTo }}</button>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isKalendarz }}" hint-placeholder-val="{{ false }}">
+    <main style="flex:1;min-width:0;overflow-y:auto;padding:22px 28px 40px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+          <div style="display:flex;align-items:baseline;gap:12px"><h3 style="margin:0">Kalendarz</h3><span style="color:var(--color-neutral-700)">19–25 października 2026</span></div>
+          <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px">
+            <sc-for list="{{ cal }}" as="d" hint-placeholder-count="7">
+              <div style="display:flex;flex-direction:column;gap:8px;min-height:420px;padding:12px 10px;border-radius:24px;background:{{ d.bg }}">
+                <div style="display:flex;align-items:baseline;gap:6px;padding:0 4px"><span style="font-size:12px;color:var(--color-neutral-700)">{{ d.d }}</span><span style="font-family:var(--font-heading);font-size:20px">{{ d.n }}</span></div>
+                <sc-for list="{{ d.ev }}" as="e" hint-placeholder-count="1">
+                  <div style="padding:8px 10px;border-radius:16px;font-size:12px;background:{{ e.bg }};color:{{ e.fg }}"><div style="font-weight:700">{{ e.time }}</div><div style="text-wrap:pretty">{{ e.title }}</div></div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div class="card" style="padding:22px;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><div class="card-title" style="font-size:20px">Zadania</div><span style="font-size:13px;color:var(--color-neutral-700)">{{ tasksLeft }}</span></div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="5">
+              <button onClick="{{ t.toggle }}" style="display:flex;gap:10px;align-items:flex-start;padding:8px 6px;border-radius:16px;border:0;background:transparent;font:inherit;text-align:left;cursor:pointer;color:inherit" style-hover="background:var(--color-neutral-200)">
+                <span style="width:22px;height:22px;flex:none;border-radius:50%;display:grid;place-items:center;border:2px solid {{ t.border }};background:{{ t.bg }};color:var(--color-bg)">{{ t.icon }}</span>
+                <span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:600;text-decoration:{{ t.deco }};opacity:{{ t.op }}">{{ t.text }}</span><span style="font-size:12px;color:var(--color-neutral-700)">{{ t.due }}</span></span>
+              </button>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:8px"><input class="input" placeholder="Nowe zadanie…" value="{{ taskDraft }}" onChange="{{ setTaskDraft }}" onKeyDown="{{ taskKey }}" style="background:var(--color-bg)"><button onClick="{{ addTask }}" class="btn btn-primary btn-icon" style="flex:none">{{ icS.plus }}</button></div>
+        </div>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isCzat }}" hint-placeholder-val="{{ false }}">
+    <section style="width:310px;flex:none;display:flex;flex-direction:column;gap:12px;padding:22px 14px 14px 20px">
+      <h3 style="margin:0">Wiadomości</h3>
+      <div style="display:flex;flex-direction:column;gap:6px;overflow-y:auto">
+        <sc-for list="{{ threads }}" as="t" hint-placeholder-count="6">
+          <button onClick="{{ t.pick }}" style="display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:24px;border:0;font:inherit;text-align:left;cursor:pointer;color:inherit;background:{{ t.bg }}" style-hover="background:var(--color-neutral-200)">
+            <div style="width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:{{ t.avBg }}">{{ t.ini }}</div>
+            <div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:6px"><span style="font-weight:700;font-size:14px">{{ t.name }}</span><sc-if value="{{ t.unread }}" hint-placeholder-val="{{ false }}"><span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent);margin-top:5px"></span></sc-if></div><div style="font-size:12px;color:var(--color-neutral-700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.last }}</div></div>
+          </button>
+        </sc-for>
+      </div>
+    </section>
+    <main style="flex:1;min-width:0;display:flex;flex-direction:column;padding:22px 28px 20px 14px">
+      <div style="display:flex;align-items:center;gap:12px;padding-bottom:14px"><div style="width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:{{ chatCur.avBg }}">{{ chatCur.ini }}</div><div style="flex:1"><div style="font-weight:700">{{ chatCur.full }}</div><div style="font-size:12px;color:var(--color-neutral-700)">{{ chatCur.goal }}&nbsp;· tydzień {{ chatCur.week }}</div></div><button onClick="{{ openProfile }}" class="btn btn-secondary">Otwórz profil</button></div>
+      <div ref="{{ chatRef }}" style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:28px;background:var(--color-neutral-100)">
+        <sc-for list="{{ msgs }}" as="m" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:3px;align-items:{{ m.align }}"><div style="max-width:62%;padding:10px 14px;font-size:14px;text-wrap:pretty;border-radius:{{ m.radius }};background:{{ m.bg }};color:{{ m.fg }}">{{ m.text }}</div><span style="font-size:11px;color:var(--color-neutral-600);padding:0 6px">{{ m.time }}</span></div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:8px;padding-top:12px"><input class="input" placeholder="Napisz wiadomość…" value="{{ draft }}" onChange="{{ setDraft }}" onKeyDown="{{ draftKey }}" style="height:44px"><button onClick="{{ sendMsg }}" class="btn btn-primary" style="flex:none;height:44px">{{ icS.send }}Wyślij</button></div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;right:24px;bottom:24px;display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:999px;background:var(--color-text);color:var(--color-bg);box-shadow:var(--shadow-lg);font-size:14px;font-weight:600">{{ icS.check }}{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const IC={
+users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+cal:'<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/>',
+chat:'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+check:'<path d="M20 6 9 17l-5-5"/>',
+plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',
+send:'<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
+trash:'<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>'};
+const ic=(n,s)=>React.createElement('svg',{width:s,height:s,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2.75,strokeLinecap:'round',strokeLinejoin:'round',style:{display:'block',flex:'none'},dangerouslySetInnerHTML:{__html:IC[n]}});
+const ICS=Object.fromEntries(Object.keys(IC).map(k=>[k,ic(k,16)]));const ICX=ic('check',12);
+const pl=n=>String(Math.round(n*10)/10).replace('.',',');
+const sgn=d=>d===0?'0':(d<0?'−':'+')+pl(Math.abs(d));
+const AV=['var(--color-accent-300)','var(--color-accent-2-300)','var(--color-neutral-300)','var(--color-accent-200)','var(--color-accent-2-200)','var(--color-neutral-200)'];
+const CLIENTS=[
+{id:'kn',full:'Katarzyna Nowak',first:'Kasia',firstTo:'Kasi',goal:'Redukcja',week:8,age:29,height:168,status:'raport',when:'2 godz.',w0:72.4,rate:-0.45,diet:85,workouts:'3 z 4',sc:[4,3,2],sentAt:'wysłany dziś, 10:24',
+ q:'W piątek było wesele i odpuściłam dietę na jeden wieczór. Lepiej następnego dnia zjeść mniej czy trzymać plan normalnie? Mogę dodać jedno cardio w tygodniu?'},
+{id:'ow',full:'Aleksandra Wójcik',first:'Ola',firstTo:'Oli',goal:'Redukcja',week:5,age:34,height:164,status:'raport',when:'5 godz.',w0:81.0,rate:-0.6,diet:70,workouts:'2 z 3',sc:[3,2,4],sentAt:'wysłany dziś, 07:51',
+ q:'Mam mało energii na popołudniowych treningach. Czy mogę przesunąć więcej węglowodanów na obiad?'},
+{id:'mw',full:'Marek Wiśniewski',first:'Marek',firstTo:'Marka',goal:'Budowa mięśni',week:1,age:31,height:182,status:'ankieta',when:'wczoraj',w0:76.0,rate:0.2,diet:0,workouts:'—',sc:[4,4,3],sentAt:'ankieta startowa, wczoraj',
+ q:'Chcę przybrać na masie, ale mam ograniczony czas — max 3 treningi po godzinie. Siłownia osiedlowa, bez maszyn.'},
+{id:'tk',full:'Tomasz Kaczmarek',first:'Tomek',firstTo:'Tomka',goal:'Siła i sprawność',week:10,age:42,height:178,status:'spóźniony',when:'4 dni',w0:88.0,rate:-0.15,diet:75,workouts:'2 z 4',sc:[3,3,4],sentAt:'raport z tygodnia 9',
+ q:'Bark trochę boli przy wyciskaniu nad głowę. Zamienić na coś innego?'},
+{id:'jl',full:'Julia Lewandowska',first:'Julia',firstTo:'Julii',goal:'Zdrowie i samopoczucie',week:6,age:26,height:171,status:'ok',when:'wt.',w0:63.0,rate:-0.1,diet:90,workouts:'4 z 4',sc:[5,4,2],sentAt:'sprawdzony 13.10',
+ q:'Wszystko dobrze, plecy dużo lepiej!'},
+{id:'pd',full:'Piotr Dąbrowski',first:'Piotr',firstTo:'Piotra',goal:'Redukcja',week:3,age:38,height:185,status:'ok',when:'pon.',w0:102.0,rate:-0.8,diet:80,workouts:'3 z 3',sc:[4,3,3],sentAt:'sprawdzony 12.10',
+ q:'Czy mogę jeść owoce wieczorem?'}];
+CLIENTS.forEach((c,i)=>{c.ini=c.full.split(' ').map(x=>x[0]).join('');c.avBg=AV[i];const n=Math.max(2,Math.min(c.week+1,9));c.weights=Array.from({length:n},(_,k)=>+(c.w0+c.rate*k+(k%3===1?0.2:0)).toFixed(1))});
+const STATUS={raport:['Nowy raport','tag-accent'],ankieta:['Nowa ankieta','tag-accent-2'],'spóźniony':['Brak raportu','tag-neutral'],ok:['Sprawdzony','tag-outline']};
+const BASEPLAN={
+A:[['Wyciskanie hantli, ławka skośna','4','10','2×14 kg',''],['Wiosłowanie hantlem','4','10','16 kg',''],['Ściąganie drążka','3','12','35 kg','Łopatki w dół przed ruchem.'],['Wyciskanie nad głowę','3','10','2×8 kg',''],['Face pull','3','15','15 kg','']],
+B:[['Przysiad ze sztangą','4','8','50 kg','Pełny zakres, pauza 1 s na dole.'],['Martwy ciąg rumuński','3','10','40 kg','Plecy proste, sztanga blisko nóg.'],['Hip thrust','4','10','60 kg',''],['Wykroki chodzone','3','12','2×10 kg',''],['Plank','3','45 s','','']],
+C:[['Martwy ciąg klasyczny','4','6','60 kg','Ostatnia seria RPE 8.'],['Pompki','3','max','',''],['Goblet squat','3','12','16 kg',''],['Wiosłowanie TRX','3','12','',''],['Spacer farmera','3','40 m','2×16 kg','']],
+K:[['Rower stacjonarny','1','40 min','','Tętno 130–145.']]};
+const DAYINFO={A:'Środa · Góra ciała',B:'Poniedziałek · Dół ciała',C:'Piątek · Całe ciało',K:'Sobota · Cardio'};
+const BASEMENU={A:[['07:30','Owsianka z masłem orzechowym i bananem',480],['10:30','Skyr z borówkami i miodem',230],['13:30','Kurczak z ryżem jaśminowym i brokułem',560],['16:30','Kanapki z twarożkiem i rzodkiewką',270],['19:30','Omlet ze szpinakiem i fetą',310]],
+B:[['07:30','Jajecznica na maśle z pieczywem',450],['10:30','Jogurt grecki z granolą',280],['13:30','Indyk z kaszą bulgur i warzywami',540],['16:30','Jabłko i garść migdałów',220],['19:30','Sałatka z tuńczykiem i ciecierzycą',360]],
+C:[['07:30','Placki proteinowe z owocami',470],['10:30','Hummus z warzywami',240],['13:30','Łosoś z ziemniakami i fasolką',580],['16:30','Serek wiejski z pomidorem',200],['19:30','Wrap z kurczakiem i warzywami',360]]};
+const clonePlan=()=>Object.fromEntries(Object.entries(BASEPLAN).map(([k,v])=>[k,v.map(([name,sets,reps,load,note])=>({name,sets,reps,load,note}))]));
+const cloneDiet=()=>({p:'130',f:'60',c:'195',menu:Object.fromEntries(Object.entries(BASEMENU).map(([k,v])=>[k,v.map(([time,name,kcal])=>({time,name,kcal:String(kcal)}))]))});
+const THREADS={
+kn:[{me:false,text:'Dzięki! Mogę w dniu B zamienić kolację na omlet?',time:'Nd 20:04'},{me:true,text:'Jasne, makro wychodzi prawie identycznie. Daj znać po treningu, jak poszło.',time:'Dziś 08:12'},{me:false,text:'Raport wysłany. Przysiad 50 kg wszedł!',time:'Dziś 10:25'}],
+ow:[{me:false,text:'Wysłałam raport, trochę słabszy tydzień.',time:'Dziś 07:52'}],
+mw:[{me:false,text:'Cześć, wypełniłem ankietę. Kiedy mogę zacząć?',time:'Wczoraj 19:10'}],
+tk:[{me:true,text:'Tomek, czekam na raport z tygodnia 10. Wszystko ok?',time:'Pt 09:00'}],
+jl:[{me:true,text:'Super tydzień, tak trzymaj.',time:'Wt 18:40'}],
+pd:[{me:false,text:'Dzięki za plan!',time:'Pon 21:02'}]};
+const UNREAD=['kn','ow','mw'];
+const CAL=[
+{d:'Pn',n:19,ev:[['07:00','Trening personalny — Marek W.','s'],['10:24','Raport — Kasia N.','r'],['17:30','Konsultacja online — nowa klientka','k']]},
+{d:'Wt',n:20,ev:[['09:00','Plan startowy — Marek W.','z'],['18:00','Check-in wideo — Ola W.','k']]},
+{d:'Śr',n:21,ev:[['07:00','Trening personalny — Piotr D.','s']]},
+{d:'Cz',n:22,ev:[['12:00','Aktualizacja jadłospisów','z']]},
+{d:'Pt',n:23,ev:[['07:00','Trening personalny — Marek W.','s'],['16:00','Check-in wideo — Tomek K.','k']]},
+{d:'Sb',n:24,ev:[]},
+{d:'Nd',n:25,ev:[['20:00','Termin raportów tygodniowych (6)','r']]}];
+const EVC={s:['var(--color-accent-700)','var(--color-bg)'],k:['var(--color-accent-2-200)','var(--color-accent-2-900)'],r:['var(--color-accent-200)','var(--color-accent-900)'],z:['var(--color-neutral-300)','var(--color-neutral-900)']};
+
+class Component extends DCLogic {
+  state={view:'klienci',sel:'kn',filter:'all',q:'',tab:'raport',reviewed:{},fb:{},toast:null,cmpView:'Przód',cmpA:0,cmpB:null,cmpPct:50,
+    planDay:'B',plans:{},diets:{},dietDay:'A',
+    tasks:[{text:'Sprawdź raport — Kasia N.',due:'Dziś',done:false},{text:'Sprawdź raport — Ola W.',due:'Dziś',done:false},{text:'Plan startowy dla Marka W.',due:'Wt, 20.10',done:false},{text:'Przypomnij o raporcie — Tomek K.',due:'Dziś',done:false},{text:'Zamówić taśmy oporowe',due:'Ten tydzień',done:true}],taskDraft:'',
+    threads:THREADS,unread:UNREAD,chatSel:'kn',draft:''};
+  componentWillUnmount(){clearTimeout(this.tt)}
+  componentDidUpdate(pp,ps){if(this.chatEl&&(ps.threads!==this.state.threads||ps.chatSel!==this.state.chatSel||ps.view!==this.state.view))this.chatEl.scrollTop=this.chatEl.scrollHeight}
+  flash(t){this.setState({toast:t});clearTimeout(this.tt);this.tt=setTimeout(()=>this.setState({toast:null}),2600)}
+  plan(id){return this.state.plans[id]||clonePlan()}
+  diet(id){return this.state.diets[id]||cloneDiet()}
+  editPlan(fn){const id=this.state.sel;this.setState(s=>{const p=JSON.parse(JSON.stringify(s.plans[id]||clonePlan()));fn(p[s.planDay]);return {plans:{...s.plans,[id]:p}}})}
+  editDiet(fn){const id=this.state.sel;this.setState(s=>{const d=JSON.parse(JSON.stringify(s.diets[id]||cloneDiet()));fn(d,s.dietDay);return {diets:{...s.diets,[id]:d}}})}
+  status(c){return this.state.reviewed[c.id]?'ok':c.status}
+  sendMsg(){const t=this.state.draft.trim();if(!t)return;const id=this.state.chatSel;
+    this.setState(s=>({draft:'',threads:{...s.threads,[id]:[...s.threads[id],{me:true,text:t,time:'Teraz'}]}}))}
+  renderVals(){
+    const s=this.state,cur=CLIENTS.find(c=>c.id===s.sel);
+    const pending=CLIENTS.filter(c=>['raport','ankieta'].includes(this.status(c))).length;
+    const nav=[['klienci','Podopieczni','users',pending],['kalendarz','Kalendarz','cal',0],['czat','Wiadomości','chat',s.unread.length]].map(([id,label,i,count])=>({label,icon:ICS[i],count:count||false,go:()=>this.setState({view:id}),bg:s.view===id?'var(--color-bg)':'transparent',fg:s.view===id?'var(--color-accent-800)':'var(--color-text)'}));
+    const filters=[['all','Wszyscy'],['todo','Do sprawdzenia'],['late','Brak raportu']].map(([id,label])=>({label,pick:()=>this.setState({filter:id}),bg:s.filter===id?'var(--color-text)':'var(--color-surface)',fg:s.filter===id?'var(--color-bg)':'var(--color-text)'}));
+    const ql=s.q.trim().toLowerCase();
+    const list=CLIENTS.filter(c=>{const st=this.status(c);if(s.filter==='todo'&&!['raport','ankieta'].includes(st))return false;if(s.filter==='late'&&st!=='spóźniony')return false;return !ql||c.full.toLowerCase().includes(ql)});
+    const clients=list.map(c=>{const [status,tagCls]=STATUS[this.status(c)];return {...c,name:c.full,status,tagCls,pick:()=>this.setState({sel:c.id,cmpB:null}),bg:c.id===s.sel?'var(--color-neutral-100)':'transparent'}});
+    const W=cur.weights,last=W.length-1,wNow=W[last],wPrev=W[last-1];
+    const stats=[['Waga',pl(wNow)+' kg','var(--color-neutral-700)','var(--color-text)','var(--color-surface)'],['Od startu',sgn(wNow-W[0])+' kg','var(--color-accent-800)','var(--color-accent-900)','var(--color-accent-200)'],['Trzymanie diety',cur.diet?cur.diet+'%':'—','var(--color-accent-2-800)','var(--color-accent-2-900)','var(--color-accent-2-200)'],['Treningi w tyg.',cur.workouts,'var(--color-neutral-700)','var(--color-text)','var(--color-surface)']].map(([label,val,fg,fg2,bg])=>({label,val,fg,fg2,bg}));
+    const tabs=[['raport','Raport tygodniowy'],['compare','Porównanie zdjęć'],['plan','Plan treningowy'],['diet','Plan żywieniowy']].map(([id,label])=>({label,pick:()=>this.setState({tab:id}),bg:s.tab===id?'var(--color-bg)':'transparent',fg:s.tab===id?'var(--color-accent-800)':'var(--color-neutral-800)',sh:s.tab===id?'var(--shadow-sm)':'none'}));
+    const circ=[['Talia',82,-0.5,-5],['Biodra',102,-0.5,-3.5],['Klatka',92,0,-2],['Ramię',30,0,-1],['Udo',60,-0.5,-2.5]];
+    const measRows=[{label:'Waga (kg)',prev:pl(wPrev),now:pl(wNow),dv:wNow-wPrev,tv:wNow-W[0]}].concat(circ.map(([l,b,d,t])=>({label:l+' (cm)',prev:pl(b+t-d),now:pl(b+t),dv:d,tv:t}))).map(m=>({...m,d:sgn(+m.dv.toFixed(1)),total:sgn(+m.tv.toFixed(1)),cls:m.dv<0?'tag-accent-2':(m.dv>0?'tag-accent':'tag-neutral')}));
+    const repScales=[['Samopoczucie',cur.sc[0],'var(--color-accent-2-600)'],['Sen',cur.sc[1],'var(--color-accent-2-600)'],['Stres',cur.sc[2],'var(--color-accent)']].map(([label,v,col])=>({label,v,dots:[1,2,3,4,5].map(i=>i<=v?col:'var(--color-neutral-300)')}));
+    const fb=s.fb[cur.id]||'';
+    const snippets=['Świetna robota w tym tygodniu!','Po jednym luźniejszym wieczorze wracamy do planu bez kompensacji.','Dodaję 1 cardio 30 min w sobotę.','Zwiększamy ciężar w przysiadzie o 2,5 kg.'].map(t=>({t,add:()=>this.setState(st=>({fb:{...st.fb,[cur.id]:((st.fb[cur.id]||'')+' '+t).trim()}}))}));
+    // compare
+    const bIdx=s.cmpB==null?last:Math.min(s.cmpB,last),aIdx=Math.min(s.cmpA,last);
+    const wk=(sel,set)=>W.map((_,i)=>({n:i+1,pick:()=>this.setState({[set]:i}),bg:i===sel?'var(--color-text)':'var(--color-bg)',fg:i===sel?'var(--color-bg)':'var(--color-text)'}));
+    const mn=Math.min(...W)-0.5,mx=Math.max(...W)+0.5,step=W.length>1?410/(W.length-1):0;
+    const dots=W.map((y,i)=>({x:+(5+i*step).toFixed(1),y:+(20+(mx-y)/(mx-mn)*130).toFixed(1),r:(i===aIdx||i===bIdx)?7:4,fill:(i===aIdx||i===bIdx)?'var(--color-accent)':'var(--color-bg)',l:'T'+(i+1)}));
+    // plan
+    const P=this.plan(cur.id),rows=P[s.planDay];
+    const planRows=rows.map((r,i)=>{const set=k=>e=>{const v=e.target.value;this.editPlan(d=>{d[i][k]=v})};return {...r,num:i+1,setName:set('name'),setSets:set('sets'),setReps:set('reps'),setLoad:set('load'),setNote:set('note'),del:()=>this.editPlan(d=>{d.splice(i,1)})}});
+    // diet
+    const D=this.diet(cur.id),n=v=>parseFloat(String(v).replace(',','.'))||0;
+    const kcal=Math.round(4*n(D.p)+9*n(D.f)+4*n(D.c));
+    const macroInputs=[['p','Białko',4,'var(--color-accent)'],['f','Tłuszcze',9,'var(--color-accent-2-600)'],['c','Węglowodany',4,'var(--color-neutral-600)']].map(([k,label,m,color])=>({label,color,val:D[k],share:kcal?Math.round(n(D[k])*m/kcal*100):0,set:e=>{const v=e.target.value;this.editDiet(d=>{d[k]=v})}}));
+    const menu=D.menu[s.dietDay]||[];const mk=menu.reduce((a,m)=>a+n(m.kcal),0);const diff=Math.round(mk-kcal);
+    const menuRows=menu.map((m,i)=>{const set=k=>e=>{const v=e.target.value;this.editDiet((d,day)=>{d.menu[day][i][k]=v})};return {...m,setTime:set('time'),setName:set('name'),setKcal:set('kcal'),del:()=>this.editDiet((d,day)=>{d.menu[day].splice(i,1)})}});
+    // calendar & tasks
+    const cal=CAL.map((d,i)=>({d:d.d,n:d.n,bg:i===0?'var(--color-accent-100)':'var(--color-neutral-100)',ev:d.ev.map(([time,title,t])=>({time,title,bg:EVC[t][0],fg:EVC[t][1]}))}));
+    const tasks=s.tasks.map((t,i)=>({...t,toggle:()=>this.setState(st=>({tasks:st.tasks.map((x,j)=>j===i?{...x,done:!x.done}:x)})),icon:t.done?ICX:null,border:t.done?'var(--color-accent-2-600)':'var(--color-neutral-400)',bg:t.done?'var(--color-accent-2-600)':'transparent',deco:t.done?'line-through':'none',op:t.done?0.5:1}));
+    const addTask=()=>{const t=s.taskDraft.trim();if(!t)return;this.setState(st=>({taskDraft:'',tasks:[...st.tasks,{text:t,due:'Bez terminu',done:false}]}))};
+    // chat
+    const chatCur=CLIENTS.find(c=>c.id===s.chatSel);
+    const threads=CLIENTS.map(c=>{const th=s.threads[c.id];return {name:c.full,ini:c.ini,avBg:c.avBg,last:th[th.length-1].text,unread:s.unread.includes(c.id),pick:()=>this.setState(st=>({chatSel:c.id,unread:st.unread.filter(x=>x!==c.id)})),bg:c.id===s.chatSel?'var(--color-neutral-100)':'transparent'}});
+    const msgs=s.threads[s.chatSel].map(m=>({text:m.text,time:m.time,align:m.me?'flex-end':'flex-start',bg:m.me?'var(--color-accent-700)':'var(--color-surface)',fg:m.me?'var(--color-bg)':'var(--color-text)',radius:m.me?'22px 22px 6px 22px':'22px 22px 22px 6px'}));
+    return {
+      icS:ICS,nav,isKlienci:s.view==='klienci',isKalendarz:s.view==='kalendarz',isCzat:s.view==='czat',
+      q:s.q,setQ:e=>this.setState({q:e.target.value}),filters,clients,clientCount:CLIENTS.length+' aktywnych',
+      cur,stats,tabs,tabRaport:s.tab==='raport',tabCompare:s.tab==='compare',tabPlan:s.tab==='plan',tabDiet:s.tab==='diet',
+      openChat:()=>this.setState(st=>({view:'czat',chatSel:cur.id,unread:st.unread.filter(x=>x!==cur.id)})),
+      rep:cur,repPhotos:['Przód','Bok','Tył'],measRows,repScales,toCompare:()=>this.setState({tab:'compare'}),toPlan:()=>this.setState({tab:'plan'}),
+      fb,setFb:e=>this.setState({fb:{...s.fb,[cur.id]:e.target.value}}),fbEmpty:!fb.trim(),snippets,
+      reviewed:!!s.reviewed[cur.id],notReviewed:!s.reviewed[cur.id],reviewedText:s.reviewed[cur.id]||'',
+      sendFb:()=>{if(!fb.trim())return;this.setState(st=>({reviewed:{...st.reviewed,[cur.id]:fb},tasks:st.tasks.map(t=>t.text.includes(cur.first)&&t.text.startsWith('Sprawdź')?{...t,done:true}:t),threads:{...st.threads,[cur.id]:[...st.threads[cur.id],{me:true,text:fb,time:'Teraz'}]}}));this.flash('Feedback wysłany do '+cur.firstTo)},
+      cmpViews:['Przód','Bok','Tył'].map(l=>({label:l,on:s.cmpView===l,pick:()=>this.setState({cmpView:l})})),cmpView:s.cmpView,cmpPct:s.cmpPct,setCmpPct:e=>this.setState({cmpPct:+e.target.value}),
+      cmpA:{label:'Tydzień '+(aIdx+1),w:pl(W[aIdx])+' kg'},cmpB:{label:'Tydzień '+(bIdx+1),w:pl(W[bIdx])+' kg'},
+      weeksA:wk(aIdx,'cmpA'),weeksB:wk(bIdx,'cmpB'),cmpDelta:sgn(+(W[bIdx]-W[aIdx]).toFixed(1))+' kg między T'+(aIdx+1)+' a T'+(bIdx+1),
+      wChart:{line:dots.map(p=>p.x+','+p.y).join(' '),dots},
+      planDays:['A','B','C','K'].map(d=>({label:d==='K'?'Cardio':'Trening '+d,on:s.planDay===d,pick:()=>this.setState({planDay:d})})),planDayInfo:DAYINFO[s.planDay]+' · '+rows.length+' ćw.',planRows,
+      addEx:()=>this.editPlan(d=>{d.push({name:'Nowe ćwiczenie',sets:'3',reps:'10',load:'',note:''})}),savePlan:()=>this.flash('Plan zapisany — '+cur.first+' dostał(a) powiadomienie'),
+      dietKcal:kcal,macroInputs,dietDays:Object.keys(D.menu).map(d=>({label:'Dzień '+d,on:s.dietDay===d,pick:()=>this.setState({dietDay:d})})),menuRows,
+      menuSum:Math.round(mk)+' kcal · '+(Math.abs(diff)<=50?'zgodne z celem':(diff>0?'+':'−')+Math.abs(diff)+' kcal od celu'),menuCls:Math.abs(diff)<=50?'tag-accent-2':'tag-accent',
+      addMeal:()=>this.editDiet((d,day)=>{d.menu[day].push({time:'',name:'Nowy posiłek',kcal:'0'})}),saveDiet:()=>this.flash('Jadłospis zapisany — '+cur.first+' dostał(a) powiadomienie'),
+      cal,tasks,tasksLeft:s.tasks.filter(t=>!t.done).length+' do zrobienia',taskDraft:s.taskDraft,setTaskDraft:e=>this.setState({taskDraft:e.target.value}),taskKey:e=>{if(e.key==='Enter')addTask()},addTask,
+      threads,chatCur,msgs,chatRef:e=>{this.chatEl=e},openProfile:()=>this.setState({view:'klienci',sel:s.chatSel}),
+      draft:s.draft,setDraft:e=>this.setState({draft:e.target.value}),draftKey:e=>{if(e.key==='Enter')this.sendMsg()},sendMsg:()=>this.sendMsg(),
+      toast:s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
