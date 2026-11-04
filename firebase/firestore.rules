@@ -59,5 +59,16 @@ service cloud.firestore {
     // The trainer's own tasks and calendar.
     match /tasks/{id} { allow read, write: if isTrainer(); }
     match /events/{id} { allow read, write: if isTrainer(); }
+
+    // Kris Trainer – kalkulator diety (folder kalkulator/). Osobna kolekcja, dostęp ma tylko jedno konto.
+    function isKris() {
+      return signedIn()
+        && request.auth.token.email == 'krzysio8925@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+    match /kris_clients/{id} {
+      allow read, write: if isKris();
+      match /versions/{v} { allow read, write: if isKris(); }
+    }
   }
 }

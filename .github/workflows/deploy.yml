@@ -1,4 +1,4 @@
-# Builds the client app (site root) and the trainer panel (/panel/) and publishes them on GitHub Pages.
+# Builds the client app (site root), the trainer panel (/panel/) and the Kris Trainer diet calculator (/kalkulator/) and publishes them on GitHub Pages.
 name: Publikacja strony
 
 on:
@@ -28,6 +28,7 @@ jobs:
           cache-dependency-path: |
             app/package-lock.json
             panel/package-lock.json
+            kalkulator/package-lock.json
 
       # A project site lives at /<repo>; a <user>.github.io repo lives at the domain root.
       - name: Ustal adres strony
@@ -49,6 +50,13 @@ jobs:
         run: |
           npm ci
           npx vite build --outDir ../site/panel --emptyOutDir
+
+      - name: Kalkulator diety Kris Trainer
+        working-directory: kalkulator
+        run: |
+          npm ci
+          npm test
+          npm run build -- --outDir ../site/kalkulator --emptyOutDir
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

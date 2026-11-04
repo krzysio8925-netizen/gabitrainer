@@ -6,6 +6,7 @@ Aplikacja dla podopiecznych i panel dla trenerki, połączone wspólną bazą da
 | --- | --- | --- |
 | Aplikacja klienta (iOS, Android, przeglądarka) | `app/` | `https://<konto>.github.io/<repozytorium>/` — można dodać do ekranu głównego telefonu |
 | Panel trenera (przeglądarka, Mac) | `panel/` | `https://<konto>.github.io/<repozytorium>/panel/` |
+| Kalkulator diety Kris Trainer (przeglądarka) | `kalkulator/` | `https://<konto>.github.io/<repozytorium>/kalkulator/` |
 | Baza danych i logowanie (Firebase) | `firebase/` | konsola Firebase |
 | Projekt z Claude Design | `project/`, `chats/` | — |
 
