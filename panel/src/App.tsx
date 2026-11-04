@@ -1,3 +1,4 @@
+import sigPlum from './assets/sig-plum.svg';
 import { TRAINER } from './backend/config';
 import { Icon, type IconName } from './icons';
 import { isUnread, statusOf, usePanel, type View } from './store';
@@ -28,8 +29,7 @@ export default function App() {
     <div className="shell">
       <aside className="side">
         <div className="brand">
-          <div className="brand-mark">G</div>
-          <div className="brand-name">GabiTrainer</div>
+          <img className="brand-sig" src={sigPlum} alt="GabiTrainer" />
         </div>
         <nav className="side-nav" aria-label="Sekcje panelu">
           {nav.map(([id, label, icon, count]) => (

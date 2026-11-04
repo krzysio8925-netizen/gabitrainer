@@ -15,7 +15,7 @@
     "android": {
       "package": "app.gabitrainer.klient",
       "adaptiveIcon": {
-        "backgroundColor": "#f5ead8",
+        "backgroundColor": "#4A2340",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"

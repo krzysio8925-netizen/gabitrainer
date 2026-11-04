@@ -3,8 +3,9 @@ import { useState, type ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Logo } from '@/components/Brand';
 import { Icon } from '@/components/Icon';
-import { Btn, ErrorText, Field, H1, H2, Input, Seg, Txt, styles } from '@/components/ui';
+import { Btn, ErrorText, Field, H2, Input, Seg, Txt, styles } from '@/components/ui';
 import { TRAINER } from '@/backend/trainer';
 import { WEEKDAYS } from '@/lib/dates';
 import { authError, useApp } from '@/store';
@@ -62,7 +63,7 @@ export default function Onboarding() {
           <View style={{ position: 'absolute', left: 150, top: 0, width: 70, height: 70, borderRadius: 35, backgroundColor: color.accent }} />
         </View>
         <View>
-          <H1 size={44} style={{ marginBottom: 10 }}>GabiTrainer</H1>
+          <View style={{ marginBottom: 14 }}><Logo width={230} /></View>
           <Txt size={17} color={color.n800}>Plan treningowy, jadłospis i cotygodniowe raporty. Gabi widzi Twoje postępy na bieżąco i dopasowuje plan.</Txt>
         </View>
         <View style={{ gap: 6 }}>

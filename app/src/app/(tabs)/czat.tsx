@@ -4,7 +4,8 @@ import { KeyboardAvoidingView, Platform, ScrollView, View, type ScrollViewInstan
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { TRAINER } from '@/backend/trainer';
-import { Btn, HText, Input, Txt, styles } from '@/components/ui';
+import { TrainerAvatar } from '@/components/Brand';
+import { Btn, Input, Txt, styles } from '@/components/ui';
 import { stamp } from '@/lib/dates';
 import { useApp } from '@/store';
 import { color } from '@/theme';
@@ -35,7 +36,7 @@ export default function Czat() {
     <SafeAreaView edges={['top']} style={styles.screen}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={{ paddingTop: 4, paddingHorizontal: 20, paddingBottom: 12, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-          <View style={[styles.circle, { width: 44, height: 44, backgroundColor: color.a300 }]}><HText size={18} color={color.a900}>{TRAINER.first[0]}</HText></View>
+          <TrainerAvatar size={44} />
           <View>
             <Txt weight={700}>{TRAINER.first}</Txt>
             <Txt size={12} color={color.n700}>Trenerka · odpowiada zwykle w kilka godzin</Txt>

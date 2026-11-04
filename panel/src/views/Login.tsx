@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 
 import { TRAINER_EMAIL } from '../backend/config';
 import { authError, type PanelState } from '../store';
+import sigPlum from '../assets/sig-plum.svg';
 
 /** Sign-in, first-time sign-up and e-mail verification for the trainer. */
 export function Login({ p }: { p: PanelState }) {
@@ -84,8 +85,7 @@ export function Login({ p }: { p: PanelState }) {
     <div className="login-wrap">
       <div className="login-card card">
         <div className="brand" style={{ padding: 0 }}>
-          <div className="brand-mark">G</div>
-          <div className="brand-name">GabiTrainer</div>
+          <img className="brand-sig" src={sigPlum} alt="GabiTrainer" />
         </div>
         {body}
       </div>

@@ -6,6 +6,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { color, font, radius } from '@/theme';
+import { Logo } from './Brand';
 import { Icon, type IconName } from './Icon';
 
 // ─── text ────────────────────────────────────────────────────────────────
@@ -230,7 +231,7 @@ export function TabScreen({ children, gap = 16 }: { children: ReactNode; gap?: n
 export function Splash() {
   return (
     <View style={[styles.screen, { alignItems: 'center', justifyContent: 'center', gap: 16 }]}>
-      <HText size={34}>GabiTrainer</HText>
+      <Logo width={230} />
       <ActivityIndicator color={color.accent} />
     </View>
   );

@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 
 import { TRAINER } from '@/backend/trainer';
+import { TrainerAvatar } from '@/components/Brand';
 import { Icon } from '@/components/Icon';
 import { B, Btn, Card, CardTitle, Empty, H2, HText, Kicker, Tag, TabScreen, Txt, styles } from '@/components/ui';
 import { longDate, stamp, weekdayIndex } from '@/lib/dates';
@@ -107,7 +108,7 @@ export default function Dzis() {
 
       <Pressable onPress={() => router.navigate('/czat')}
         style={({ pressed }) => [{ flexDirection: 'row', gap: 12, paddingVertical: 16, paddingHorizontal: 18, borderRadius: 28, borderWidth: 1.5, borderColor: color.divider, backgroundColor: pressed ? color.n100 : 'transparent' }]}>
-        <View style={[styles.circle, { width: 40, height: 40, backgroundColor: color.a300 }]}><HText size={15} color={color.a900}>{TRAINER.first[0]}</HText></View>
+        <TrainerAvatar size={40} />
         <View style={{ flex: 1, minWidth: 0 }}>
           <Txt size={13} color={color.n700}><B color={color.text}>{TRAINER.first}</B>{lastTrainerMsg ? ' · ' + stamp(lastTrainerMsg.createdAt?.toDate()).toLowerCase() : ''}</Txt>
           <Txt size={14} numberOfLines={3}>{lastTrainerMsg?.text ?? `Masz pytanie? Napisz do ${TRAINER.first}.`}</Txt>

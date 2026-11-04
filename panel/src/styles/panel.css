@@ -26,8 +26,8 @@ button { font: inherit; color: inherit; }
 
 .side { width: 232px; flex: none; display: flex; flex-direction: column; gap: 22px; padding: 22px 16px; background: var(--color-surface); }
 .brand { display: flex; align-items: center; gap: 10px; padding: 0 6px; }
-.brand-mark { width: 34px; height: 34px; border-radius: 50%; background: var(--color-accent); color: var(--color-bg); display: grid; place-items: center; font-family: var(--font-heading); font-size: 17px; }
-.brand-name { font-family: var(--font-heading); font-size: 19px; }
+/* Signature logo (sig-plum.svg from GabiTrainer-logo.zip). */
+.brand-sig { height: 58px; width: auto; display: block; }
 .side-nav { display: flex; flex-direction: column; gap: 4px; }
 .nav-btn { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 999px; border: 0; font-size: 14px; font-weight: 600; cursor: pointer; text-align: left; background: transparent; }
 .nav-btn:hover { background: var(--color-neutral-300); }
